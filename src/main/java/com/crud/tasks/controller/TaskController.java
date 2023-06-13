@@ -15,15 +15,15 @@ public class TaskController {
         return new ArrayList<>();
     }
     @GetMapping
-    public TaskDto getTask(Long taskid){
-        return new TaskDto(1L, "test title", "test_content")
+    public TaskDto getTask(@PathVariable Long taskid){
+        return new TaskDto(1L, "test title", "test_content");
     }
     @DeleteMapping
     public void deleteTask(Long taskid){
     }
     @PutMapping
     public TaskDto updateTask(TaskDto taskDto){
-        return new TaskDto(1L, "edited title", "edited content")
+        return new TaskDto(1L, "edited title", "edited content");
     }
     @PostMapping
     public void createTask(TaskDto taskDto){
