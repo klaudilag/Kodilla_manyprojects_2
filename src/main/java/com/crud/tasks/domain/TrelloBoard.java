@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
@@ -13,4 +14,17 @@ public class TrelloBoard {
     private String id;
     private String name;
     private List<TrelloList> lists;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrelloBoard that = (TrelloBoard) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(lists, that.lists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, lists);
+    }
 }
