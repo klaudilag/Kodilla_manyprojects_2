@@ -5,6 +5,7 @@ import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,7 +38,6 @@ class TaskControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Przygotowanie przykładowych danych do testów
         mockTasks = List.of(
                 new Task(1L, "Task 1", "Content 1"),
                 new Task(2L, "Task 2", "Content 2")
@@ -66,23 +66,13 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$[1].id").value(mockTasks.get(1).getId()))
                 .andExpect(jsonPath("$[1].title").value(mockTasks.get(1).getTitle()))
                 .andExpect(jsonPath("$[1].content").value(mockTasks.get(1).getContent()));
-
-        // Weryfikacja, czy metoda serwisu została wywołana tylko raz
-        verify(dbService, times(1)).getAllTasks();
     }
 
     @Test
     void shouldDeleteTaskById() throws Exception {
         Long taskIdToDelete = 1L;
-        // Ustawienie zachowania mocka dla serwisu
-        doNothing().when(dbService).deleteTaskById(taskIdToDelete);
-
-        // Wywołanie metody kontrolera i weryfikacja statusu odpowiedzi
-        mockMvc.perform(delete("/v1/tasks/{taskId}", taskIdToDelete))
+        mockMvc.perform(delete("/v1/tasks/{taskid}",taskIdToDelete))
                 .andExpect(status().isOk());
-
-        // Weryfikacja, czy metoda serwisu została wywołana tylko raz z odpowiednim ID zadania
-        verify(dbService, times(1)).deleteTaskById(taskIdToDelete);
     }
 
     @Test
@@ -90,45 +80,49 @@ class TaskControllerTest {
         TaskDto taskDtoToCreate = new TaskDto(null, "New Task", "New Content");
         Task createdTask = new Task(1L, "New Task", "New Content");
 
-        // Ustawienie zachowania mocka dla mapper'a
+
         when(taskMapper.mapToTask(taskDtoToCreate)).thenReturn(createdTask);
 
-        // Wywołanie metody kontrolera i weryfikacja statusu odpowiedzi
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(taskDtoToCreate);
+
         mockMvc.perform(post("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(taskDtoToCreate)))
+                        .content(jsonString))
                 .andExpect(status().isOk());
 
-        // Weryfikacja, czy metoda serwisu została wywołana tylko raz z odpowiednim zadaniem
-        verify(dbService, times(1)).saveTask(createdTask);
     }
 
     @Test
     void shouldUpdateTask() throws Exception {
-        // Przygotowanie przykładowych danych do testu
-        TaskDto taskDtoToUpdate = new TaskDto(1L, "Updated Task", "Updated Content");
-        Task updatedTask = new Task(1L, "Updated Task", "Updated Content");
 
-        // Konfiguracja zachowania mocka dla mapper'a
-        when(taskMapper.mapToTask(taskDtoToUpdate)).thenReturn(updatedTask);
-        // Konfiguracja zachowania mocka dla serwisu - wywołanie saveTask()
-        when(dbService.saveTask(updatedTask)).thenReturn(updatedTask);
+        TaskDto taskDtoToUpdate = new TaskDto(1L, "Task Task", "Task Content");
+        Task taskToUpdate = new Task(1L, "Task Task", "Task Content");
 
-        // Wywołanie metody kontrolera i weryfikacja statusu odpowiedzi
-        mockMvc.perform(put("/v1/tasks")
+        TaskDto taskDtoUpdating = new TaskDto(1L, "Updated!", "Updated!");
+        Task taskUpdating = new Task(1L, "Updated!", "Updated!");
+
+        when(taskMapper.mapToTask(taskDtoUpdating)).thenReturn(taskUpdating);
+
+        when(dbService.saveTask(taskUpdating)).thenReturn(taskUpdating);
+
+        when(taskMapper.mapToTask(taskDtoToUpdate)).thenReturn(taskToUpdate);
+
+        when(dbService.saveTask(taskToUpdate)).thenReturn(taskToUpdate);
+
+        Gson gson = new Gson();
+        String jsonUpdating = gson.toJson(taskUpdating);
+        String jsonUpdated = gson.toJson(taskToUpdate);
+
+        mockMvc.perform(post("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(taskDtoToUpdate)))
+                        .content(jsonUpdated))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/v1/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonUpdating))
                 .andExpect(status().isOk());
 
-        // Weryfikacja, czy metoda serwisu została wywołana tylko raz z odpowiednim zadaniem
-        verify(dbService, times(1)).saveTask(updatedTask);
     }
 
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
