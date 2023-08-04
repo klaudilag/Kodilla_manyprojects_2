@@ -9,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.crud.tasks.validator.TrelloValidator;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 @RequiredArgsConstructor
 public class TrelloFacade {
     private final TrelloService trelloService;
