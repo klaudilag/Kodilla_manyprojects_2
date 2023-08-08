@@ -11,9 +11,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class FacebookTestingApp {
-    public static final String SEARCHFIELD = "/html/body/div[3]/div[2]/div/div/div/div/div[4]/button[2]";
-    public static final String REGISTERBUTTONXPATH = "/html/body/div/div/div/div/div/div/div[2]/div/div/form/div[5]/a";
-    public static final String NAME = "/html/body/div[3]/div[2]/div/div/div[2]/div/div/div/form/div/div/div/div/div/input";
+    public static final String SEARCHFIELD = "//div[contains(@class, \"_al64\")]/button[2] ";
+    public static final String REGISTERBUTTONXPATH = "//div[contains(@class, \"_6ltg\")]/a";
+    public static final String NAME = "//div[contains(@class, \"_5dbb\")]/input";
     public static final String SURNAME = "//div[contains(@class, \"uiStickyPlaceholderInput\")]/input";
     public static final String DAY = "//div[contains(@class, \"_5k_5\")]/span/span/select";
     public static final String MONTH = "//div[contains(@class, \"_5k_5\")]/span/span/select[2]";
