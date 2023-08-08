@@ -1,8 +1,7 @@
 package com.crud.tasks.trello.client;
-import com.crud.tasks.domain.TrelloBoard;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
+import com.crud.tasks.service.SimpleEmailService;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.facade.TrelloFacade;
 import com.crud.tasks.validator.TrelloValidator;
@@ -12,9 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.crud.tasks.domain.TrelloList;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,8 @@ import static org.mockito.Mockito.when;
 public class TrelloFacadeTest {
     @InjectMocks
     private TrelloFacade trelloFacade;
+    @Mock
+    private SimpleEmailService simpleEmailService;
     @Mock
     private TrelloService trelloService;
     @Mock
@@ -84,7 +85,24 @@ public class TrelloFacadeTest {
         List<TrelloBoardDto> mappedToDto = trelloMapper.mapToBoardsDto(mappedTrelloBoards);
         List<TrelloListDto> mappedToList = trelloMapper.mapToListDto(mappedTrelloLists);
         List<TrelloList> mappedToListDto = trelloMapper.mapToList(trelloLists);
+        TrelloCard trelloCard = new TrelloCard("karta", "opis", "pos", "1");
+        TrelloCardDto trelloCardDto = trelloMapper.mapToCardDto(trelloCard);
 
+        trelloService.createTrelloCard(trelloCardDto);
+        List<TrelloBoardDto> trelloBoardDtoList = trelloService.fetchTrelloBoards();
+        trelloFacade.createCard(trelloCardDto);
+        trelloFacade.fetchTrelloBoards();
 
+        Mail mail = new Mail("test@test.com", "Test", "Test Message",null);
+        Mail mail2 = new Mail("test@test.com", "Test", "Test Message","");
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mail.getMailTo());
+        mailMessage.setSubject(mail.getSubject());
+        mailMessage.setText(mail.getMessage());
+        mailMessage.setCc(mail.getToCc());
+
+        simpleEmailService.send(mail);
+        simpleEmailService.send(mail2);
     }
 }
