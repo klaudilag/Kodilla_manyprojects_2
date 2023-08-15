@@ -33,6 +33,13 @@ public class SimpleEmailService {
             log.error("Failed to process email sending: " + e.getMessage(), e);
         }
     }
+    public SimpleMailMessage sendTrelloEverydayTaskList(final Mail mail){
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mail.getMailTo());
+        mailMessage.setSubject(mail.getSubject());
+        mailMessage.setText(mailCreatorService.buildTrelloEverydayTaskList(mail.getMessage()));
+        return mailMessage;
+    }
 
     private MimeMessagePreparator createMimeMessage(final Mail mail) {
         return mimeMessage -> {
@@ -51,4 +58,5 @@ public class SimpleEmailService {
         mailMessage.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()));
         return mailMessage;
     }
+
 }

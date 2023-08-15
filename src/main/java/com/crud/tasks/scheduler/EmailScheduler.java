@@ -20,7 +20,7 @@ public class EmailScheduler {
     public void sendInformationEmail() {
         long size = taskRepository.count();
         if(size > 1){
-        simpleEmailService.send(
+        simpleEmailService.sendTrelloEverydayTaskList(
                 new Mail(
                         adminConfig.getAdminMail(),
                         SUBJECT,
@@ -30,7 +30,7 @@ public class EmailScheduler {
             );
         }
         else if (size == 1) {
-            simpleEmailService.send(
+            simpleEmailService.sendTrelloEverydayTaskList(
                     new Mail(
                             adminConfig.getAdminMail(),
                             SUBJECT,
@@ -40,7 +40,7 @@ public class EmailScheduler {
             );
         }
         else if(size == 0){
-            simpleEmailService.send(
+            simpleEmailService.sendTrelloEverydayTaskList(
                     new Mail(
                             adminConfig.getAdminMail(),
                             SUBJECT,
