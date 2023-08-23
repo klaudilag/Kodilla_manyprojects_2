@@ -45,7 +45,15 @@ public class MailCreatorService {
     public String buildTrelloEverydayTaskList(String message) {
         Context context = new Context();
         context.setVariable("message", message);
-        context.setVariable("is_friend",false);
+        context.setVariable("tasks_url", "http://localhost:8888/crud");
+        context.setVariable("button", "Visit website");
+        context.setVariable("admin_name", adminConfig.getAdminName());
+        context.setVariable("owner_surname", adminConfig.getOwnerSurname());
+        context.setVariable("owner_name", adminConfig.getOwnerName());
+        context.setVariable("company_name", adminConfig.getCompanyName());
+        context.setVariable("show_button", false);
+        context.setVariable("is_friend", false);
+        context.setVariable("admin_config", adminConfig);
         return templateEngine.process("mail/created-trello-card-mail", context);
     }
 }

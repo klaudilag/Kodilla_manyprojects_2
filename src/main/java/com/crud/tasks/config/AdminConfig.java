@@ -13,10 +13,10 @@ public class AdminConfig {
     @Value("${admin.name}")
     private String adminName;
 
-    @Value("{owner.name}")
+    @Value("${owner.name}")
     private String ownerName;
-    @Value("{owner.surname}")
+    @Value("${owner.surname}")
     private String ownerSurname;
-    @Value("{company.name}")
+    @Value("${company.name}")
     private String companyName;
 }
