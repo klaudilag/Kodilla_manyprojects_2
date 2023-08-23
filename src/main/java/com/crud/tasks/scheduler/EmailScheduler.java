@@ -17,10 +17,11 @@ public class EmailScheduler {
     private final AdminConfig adminConfig;
     private static final String SUBJECT = "Tasks: Once a day email";
     @Scheduled(cron = "0 15 14 * * *")
+    //@Scheduled(fixedDelay = 10000) do testów
     public void sendInformationEmail() {
         long size = taskRepository.count();
         if(size > 1){
-        simpleEmailService.sendTrelloEverydayTaskList(
+        simpleEmailService.send(
                 new Mail(
                         adminConfig.getAdminMail(),
                         SUBJECT,
@@ -30,7 +31,7 @@ public class EmailScheduler {
             );
         }
         else if (size == 1) {
-            simpleEmailService.sendTrelloEverydayTaskList(
+            simpleEmailService.send(
                     new Mail(
                             adminConfig.getAdminMail(),
                             SUBJECT,
@@ -40,7 +41,7 @@ public class EmailScheduler {
             );
         }
         else if(size == 0){
-            simpleEmailService.sendTrelloEverydayTaskList(
+            simpleEmailService.send(
                     new Mail(
                             adminConfig.getAdminMail(),
                             SUBJECT,
