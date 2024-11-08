@@ -33,7 +33,7 @@ public class CruddAppTestSuite {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DELETEBUTTONXPATH)));
         deleteButton.click();
-        Thread.sleep(3000);
+        Thread.sleep(300);
         driver.close();
     }
     @Test
